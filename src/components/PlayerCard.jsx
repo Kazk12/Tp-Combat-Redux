@@ -27,10 +27,13 @@ function PlayerCard({ player }) {
         <span className="badge badge-danger ml-2 " id="degatSpanJ1"></span>
         <div className="row ">
           <div>
-            <ButtonCapacity player={player} />
-            <ButtonCapacity player={player} />
-            <ButtonCapacity player={player} />
-            <ButtonCapacity player={player} />
+            {player.capacities.map((capacity, index) => (
+              <ButtonCapacity 
+                key={index} 
+                player={player} 
+                capacity={capacity} 
+              />
+            ))}
           </div>
         </div>
       </div>

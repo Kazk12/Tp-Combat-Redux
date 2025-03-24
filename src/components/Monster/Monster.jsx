@@ -1,7 +1,12 @@
 import './Monster.css';
 import ProgressBar from "../ProgressBar/ProgressBar";
+import { useSelector } from "react-redux";
+import React from "react";
 
 function Monster() {
+
+      // Le hook useSelector nous permet d'extraire des données du store Redux
+  const monster = useSelector((state) => state.fight.monster);
   return (
     <section>
       <div className="container">
@@ -26,12 +31,12 @@ function Monster() {
                 </div>
               </div>
               <ProgressBar
-                pv="800"
-                pvMax="800"
-                bgType="bg-danger"
-                faType="fa-heart"
-                barName=" : pv"
-              />
+      pv={monster.pv}
+      pvMax={monster.pvMax}
+      bgType="bg-danger"
+      faType="fa-heart"
+      barName=" : pv"
+    />
             </div>
           </div>
         </div>
