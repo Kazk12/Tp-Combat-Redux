@@ -273,3 +273,28 @@
     gap: 0.4rem;
   }
 }
+
+/* Ajouter à la fin du fichier */
+
+/* Effet visuel pour mana bas */
+.player-mana-bar .progress-bar[style*="width: 3"] .icon-text,
+.player-mana-bar .progress-bar[style*="width: 2"] .icon-text,
+.player-mana-bar .progress-bar[style*="width: 1"] .icon-text,
+.player-mana-bar .progress-bar[style*="width: 0"] .icon-text {
+  color: #ff7f7f !important;
+  animation: mana-low-pulse 1.2s infinite alternate;
+}
+
+@keyframes mana-low-pulse {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+/* Accentuer le feedback visuel quand le mana est critique */
+.player-mana-bar .progress-bar[style*="width: 1"],
+.player-mana-bar .progress-bar[style*="width: 0"] {
+  background: linear-gradient(to right, #890000, #c30000) !important;
+  box-shadow: 
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 0 8px rgba(255, 0, 0, 0.5);
+}

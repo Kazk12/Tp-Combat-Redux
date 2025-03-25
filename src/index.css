@@ -1,24 +1,96 @@
-body {
-  background-color: #232323;
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Russo+One&family=Teko:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap');
+
+:root {
+  /* Palette de couleurs principale */
+  --primary: #7928CA;
+  --primary-dark: #4C1D95;
+  --primary-light: #9D4EFF;
+  --secondary: #FF0080;
+  --secondary-dark: #CC0066;
+  --secondary-light: #FF4DA6;
+  
+  /* Couleurs Dragon Ball */
+  --orange: #FF5900;
+  --yellow: #FFDD00;
+  --blue-goku: #00A8FF;
+  --purple-vegeta: #8A2BE2;
+  --green-piccolo: #2ECC71;
+  --red-kaioken: #FF3C38;
+  
+  /* Couleurs fonctionnelles */
+  --dark: #161622;
+  --darker: #0D0D15;
+  --light: #EAEAFF;
+  --light-dim: rgba(234, 234, 255, 0.7);
+  --mana: #00CCFF;
+  --health: #FF3547;
+  --heal: #23E33E;
+  --warning: #FFBB00;
+  --combo: #FF3D00;
+  --success: #00C853;
+  
+  /* Texture manga */
+  --manga-lines: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 2px,
+    transparent 2px,
+    transparent 4px
+  );
 }
 
-html,
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: "Hind", sans-serif;
+  background-color: var(--darker);
+  color: var(--light);
+  font-family: 'Outfit', sans-serif;
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: 
+    var(--manga-lines),
+    radial-gradient(circle at center, var(--dark), var(--darker) 90%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Réinitialisation des styles d'image */
 img {
   max-width: 100%;
-  height: 250px;
+  height: auto;
   display: block;
 }
 
-h3 {
-  text-align: center;
-  font-weight: 400;
-  margin-bottom: 0;
+button {
+  cursor: pointer;
+  font-family: 'Russo One', sans-serif;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }

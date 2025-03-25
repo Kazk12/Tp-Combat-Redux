@@ -1,7 +1,396 @@
-.btn {
-  padding: 0.1em 0.2rem !important ;
+.capacity-container {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.fa-bomb {
-  color: black;
+.btn {
+  width: 100%;
+  height: 100%;
+  min-height: 36px;
+  padding: 0.4rem 0.25rem;
+  border-radius: 8px;
+  text-align: center;
+  font-family: 'Russo One', sans-serif;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 4px 0 rgba(0, 0, 0, 0.8),
+    0 6px 10px rgba(0, 0, 0, 0.4);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  transition: all 0.15s ease-out;
+  transform: translateY(-2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Effet de lueur intérieure */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.25) 0%, 
+    rgba(255, 255, 255, 0) 100%);
+  z-index: -1;
+}
+
+/* Effet de pulsation subtile */
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    transparent 70%);
+  opacity: 0;
+  z-index: -1;
+  animation: pulse-btn 2s infinite alternate;
+}
+
+@keyframes pulse-btn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Disposition du contenu du bouton */
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 3px;
+}
+
+/* Styles des icônes */
+.btn .capacity-name {
+  margin-right: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn .damage-icon,
+.btn .mana-icon {
+  display: flex;
+  align-items: center;
+  margin-left: 3px;
+  border-radius: 4px;
+  padding: 0.15rem 0.35rem;
+  font-size: 0.65rem;
+  line-height: 1;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.btn .damage-icon {
+  color: #ffcc00;
+  text-shadow: 0 0 4px rgba(255, 204, 0, 0.7);
+}
+
+.btn .mana-icon {
+  color: #00eaff;
+  text-shadow: 0 0 4px rgba(0, 234, 255, 0.7);
+}
+
+.btn .damage-icon i,
+.btn .mana-icon i {
+  margin-right: 2px;
+}
+
+/* Effet 3D au survol */
+.btn:hover:not(.btn-disabled) {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 6px 0 rgba(0, 0, 0, 0.8),
+    0 8px 15px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
+}
+
+/* Effet d'écrasement au clic */
+.btn:active:not(.btn-disabled) {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 0 rgba(0, 0, 0, 0.8),
+    0 3px 5px rgba(0, 0, 0, 0.5);
+  filter: brightness(0.95);
+}
+
+/* Couleurs des boutons avec dégradés */
+.btn-success { 
+  background: linear-gradient(to bottom, #00c853, #009624);
+  border-color: #007722;
+}
+
+.btn-primary { 
+  background: linear-gradient(to bottom, #448aff, #2962ff);
+  border-color: #0039cb;
+}
+
+.btn-danger { 
+  background: linear-gradient(to bottom, #ff5252, #d50000);
+  border-color: #9b0000;
+}
+
+.btn-warning { 
+  background: linear-gradient(to bottom, #ffd600, #ffab00);
+  border-color: #c67c00;
+}
+
+.btn-info { 
+  background: linear-gradient(to bottom, #18ffff, #00b8d4);
+  border-color: #0088a3;
+}
+
+.btn-dark { 
+  background: linear-gradient(to bottom, #424242, #212121);
+  border-color: #000000;
+}
+
+/* Style désactivé avec effet manga */
+.btn-disabled {
+  background: linear-gradient(to bottom, #616161, #424242) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  cursor: not-allowed;
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 0 #000,
+    0 3px 5px rgba(0, 0, 0, 0.3);
+  opacity: 0.8;
+  border-color: #212121;
+}
+
+/* Animation pour le bouton en combat */
+.btn-fighting {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-fighting::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: fighting-shine 1s infinite;
+}
+
+@keyframes fighting-shine {
+  100% {
+    left: 100%;
+  }
+}
+
+/* Animation pour les messages */
+.miss-message {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(0, 204, 255, 0.9), rgba(0, 153, 255, 0.9));
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  animation: miss-message 2s ease-in-out forwards;
+  z-index: 100;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+@keyframes miss-message {
+  0% { transform: translateX(-50%) translateY(0); opacity: 0; }
+  10% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  80% { transform: translateX(-50%) translateY(-20px); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(-30px); opacity: 0; }
+}
+
+/* Animation de hit (pour plus tard) */
+.hit-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../assets/effects/hit.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+  animation: hit-anim 0.5s ease-out forwards;
+}
+
+@keyframes hit-anim {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Styles responsives */
+@media (max-width: 1200px) {
+  .btn {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.2rem;
+    min-height: 32px;
+  }
+  
+  .btn .damage-icon,
+  .btn .mana-icon {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .btn {
+    min-height: 38px;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.25rem;
+  }
+  
+  .btn .damage-icon,
+  .btn .mana-icon {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.2rem;
+    min-height: 34px;
+  }
+  
+  .btn .damage-icon,
+  .btn .mana-icon {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.6rem;
+  }
+}
+
+/* Ajouter à la fin du fichier */
+
+/* Style spécifique pour manque de mana */
+.btn-low-mana {
+  position: relative;
+  background: linear-gradient(to bottom, #616161, #424242) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: #212121 !important;
+  cursor: not-allowed;
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 3px 0 #000,
+    0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Indication visuelle du manque de mana */
+.btn-low-mana::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 174, 255, 0.1),
+      rgba(0, 174, 255, 0.1) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  z-index: 0;
+  border-radius: 7px;
+  animation: pulse-low-mana 2s infinite alternate;
+}
+
+/* Effet de pulsation pour le manque de mana */
+@keyframes pulse-low-mana {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.7; }
+}
+
+/* Badge indication manque de mana */
+.mana-required {
+  position: absolute;
+  top: -18px;
+  right: 5px;
+  background: linear-gradient(to bottom, #0288d1, #01579b);
+  color: white;
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  animation: pulse-mana-badge 1.5s infinite alternate;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.mana-required i {
+  font-size: 0.7rem;
+  color: #00eaff;
+  text-shadow: 0 0 3px rgba(0, 234, 255, 0.5);
+}
+
+@keyframes pulse-mana-badge {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Contenu du bouton avec mana insuffisant */
+.btn-low-mana .capacity-name {
+  opacity: 0.7;
+}
+
+.btn-low-mana .damage-icon,
+.btn-low-mana .mana-icon {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Mana icon en rouge quand pas assez */
+.btn-low-mana .mana-icon {
+  color: #ff4d4d !important;
+  background-color: rgba(255, 0, 0, 0.15) !important;
+  text-shadow: 0 0 4px rgba(255, 77, 77, 0.5) !important;
+  font-weight: bold;
+}
+
+/* Style spécifique au survol du bouton avec mana insuffisant */
+.btn-low-mana:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 
+    0 3px 0 #000,
+    0 4px 6px rgba(0, 0, 0, 0.4) !important;
+  filter: brightness(1) !important;
 }
