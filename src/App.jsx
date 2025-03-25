@@ -2,6 +2,7 @@ import './App.css';
 import Monster from './components/Monster/Monster';
 import PlayerList from './components/PlayerList';
 import GameLog from './components/GameLog/GameLog';
+import UltimateAnimation from './components/UltimateAnimation/UltimateAnimation';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
           <PlayerList />
         </div>
       </div>
+      
+      {/* Composant d'animation des ultimes */}
+      <UltimateAnimation />
     </div>
   );
 }

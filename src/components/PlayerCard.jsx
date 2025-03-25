@@ -1,4 +1,5 @@
 import ButtonCapacity from "./ButtonCapacity/ButtonCapacity";
+import UltimateButton from "./UltimateButton/UltimateButton";
 import ProgressBar from "./ProgressBar/ProgressBar";
 import "./PlayerCard.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -65,6 +66,9 @@ function PlayerCard({ player }) {
             />
           ))}
         </div>
+        
+        {/* Bouton d'ultime */}
+        <UltimateButton player={player} />
         
         {/* Bouton passer tour */}
         {isPlayerTurn && (

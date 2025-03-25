@@ -1,0 +1,4 @@
+fire.gif - Animation de feu pour Tsuna
+lightning.gif - Animation d'éclair pour Eren
+wind.gif - Animation de vent pour Boruto
+energy.gif - Animation d'énergie pour Isagi
