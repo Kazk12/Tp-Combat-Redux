@@ -16,6 +16,26 @@
   overflow-x: hidden;
 }
 
+.log-section {
+  flex: 2; /* Prend 40% de l'espace */
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.game-log-container {
+  margin: 0;
+  height: 100%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-log-entries {
+  flex-grow: 1;
+  max-height: none;
+}
+
 /* Titre du jeu en style manga */
 .game-title {
   font-family: 'Bangers', cursive;
@@ -44,15 +64,19 @@
   margin: 0 auto;
 }
 
+.monster-log-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
 /* Section monstre */
 .monster-section {
-  width: 100%;
-  margin: 0 auto 1rem auto;
+  flex: 3; /* Prend 60% de l'espace */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  z-index: 2;
+  justify-content: flex-end;
 }
 
 /* Effet d'aura du monstre */
@@ -219,6 +243,19 @@
   .card {
     min-height: 400px;
   }
+
+  .monster-log-container {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  
+  .monster-section, .log-section {
+    flex: 1;
+  }
+  
+  .game-log-container {
+    min-height: 250px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -248,6 +285,18 @@
   
   .player-image-container {
     height: 140px;
+  }
+  .monster-log-container {
+    flex-direction: column;
+  }
+  
+  .monster-section, .log-section {
+    width: 100%;
+  }
+  
+  .game-log-container {
+    min-height: 200px;
+    margin-top: 1rem;
   }
 }
 

@@ -1,12 +1,32 @@
 import ButtonCapacity from "./ButtonCapacity/ButtonCapacity";
 import ProgressBar from "./ProgressBar/ProgressBar";
 import "./PlayerCard.css";
+import { useDispatch, useSelector } from "react-redux";
+import { skipTurn } from "../features/fight/fightSlice";
 
 function PlayerCard({ player }) {
+  const dispatch = useDispatch();
+  const currentPlayer = useSelector(state => 
+    state.fight.players.find(p => p.id === player.id)
+  );
+  const isMonsterTurn = useSelector(state => state.fight.isMonsterTurn);
+  
+  // Vérifier si c'est le tour de ce joueur
+  const isPlayerTurn = currentPlayer.canPlay && !isMonsterTurn;
+  
+  const handleSkipTurn = () => {
+    if (isPlayerTurn) {
+      dispatch(skipTurn({ playerId: player.id }));
+    }
+  };
+  
   return (
-    <div className="card" id={`joueur${player.id}`}>
+    <div className={`card ${isPlayerTurn ? 'active-player-card' : ''}`} id={`joueur${player.id}`}>
       <div className="card-body text-center">
-        <h5 className="card-title">{player.name}</h5>
+        <h5 className="card-title">
+          {player.name}
+          {isPlayerTurn && <span className="player-turn-badge"><i className="fas fa-play"></i></span>}
+        </h5>
         
         <div className="player-image-container">
           <img 
@@ -45,6 +65,17 @@ function PlayerCard({ player }) {
             />
           ))}
         </div>
+        
+        {/* Bouton passer tour */}
+        {isPlayerTurn && (
+          <button 
+            className="skip-turn-btn" 
+            onClick={handleSkipTurn}
+            title="Passer son tour (+3 ki)"
+          >
+            <i className="fas fa-forward"></i> Passer tour
+          </button>
+        )}
       </div>
     </div>
   );

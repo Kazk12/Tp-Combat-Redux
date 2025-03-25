@@ -4,12 +4,18 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 
 function Monster() {
   const monster = useSelector((state) => state.fight.monster);
+  const isMonsterTurn = useSelector((state) => state.fight.isMonsterTurn);
   
   return (
-    <div className="monster-card">
+    <div className={`monster-card ${isMonsterTurn ? 'monster-attacking' : ''}`}>
       <h2>{monster.name}</h2>
       
-      {/* Utilisation du composant ProgressBar */}
+      {isMonsterTurn && (
+        <div className="monster-turn-message">
+          <i className="fas fa-skull"></i> ATTAQUE!
+        </div>
+      )}
+      
       <div className="monster-progress-container">
         <ProgressBar
           pv={monster.pv}
@@ -25,7 +31,7 @@ function Monster() {
           src={monster.image}
           className="monster-image"
           alt={monster.name}
-          style={{ maxHeight: "250px" }} // Ajouter un style inline pour contrôler la hauteur max
+          style={{ maxHeight: "250px" }}
         />
       </div>
       

@@ -298,3 +298,78 @@
     inset 0 1px rgba(255, 255, 255, 0.3),
     0 0 8px rgba(255, 0, 0, 0.5);
 }
+
+/* Ajouter à la fin de PlayerCard.css */
+
+/* Style pour la carte du joueur actif */
+.active-player-card {
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    inset 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 0 2px rgba(34, 197, 94, 0.5);
+  animation: pulse-active-card 1.5s infinite alternate;
+}
+
+@keyframes pulse-active-card {
+  0% { box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    inset 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 0 2px rgba(34, 197, 94, 0.3); }
+  100% { box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    inset 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 0 4px rgba(34, 197, 94, 0.6); }
+}
+
+/* Badge indiquant le tour du joueur */
+.player-turn-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  background: rgba(34, 197, 94, 0.8);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  vertical-align: middle;
+  line-height: 20px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Bouton pour passer son tour */
+.skip-turn-btn {
+  margin-top: 0.75rem;
+  background: linear-gradient(to bottom, #64748b, #475569);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skip-turn-btn:hover {
+  background: linear-gradient(to bottom, #475569, #334155);
+  transform: translateY(-1px);
+}
+
+.skip-turn-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.skip-turn-btn i {
+  margin-right: 0.3rem;
+}

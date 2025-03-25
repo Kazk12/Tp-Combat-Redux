@@ -1,0 +1,97 @@
+.game-log-container {
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.9), rgba(10, 10, 15, 0.95));
+  border-radius: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    inset 0 0 1px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  width: 100%;
+  max-width: none; /* Supprimé pour permettre d'occuper tout l'espace disponible */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+  
+  .game-log-header {
+    background: linear-gradient(to right, rgba(80, 0, 120, 0.9), rgba(120, 0, 80, 0.9));
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+  }
+  
+  .game-log-header h3 {
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    color: white;
+    margin: 0;
+    text-shadow: 
+      2px 2px 0 rgba(0, 0, 0, 0.8),
+      0 0 8px rgba(255, 0, 128, 0.5);
+  }
+  
+  .round-badge {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .game-log-entries {
+    padding: 0.5rem;
+    flex-grow: 1; /* Pour occuper l'espace disponible */
+    overflow-y: auto;
+    max-height: none; /* Supprimé pour s'adapter à la hauteur du conteneur parent */
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .log-entry {
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0; /* Supprimé car nous utilisons gap */
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+    color: var(--light-dim);
+    transition: all 0.2s ease;
+  }
+  
+  .log-entry:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .latest-entry {
+    background: linear-gradient(to right, rgba(0, 87, 225, 0.15), rgba(0, 145, 225, 0.05));
+    color: white;
+    border-left: 3px solid #0057e7;
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  .log-icon {
+    margin-right: 0.4rem;
+    color: #0057e7;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @media (max-width: 768px) {
+    .game-log-container {
+      max-width: 100%;
+      margin: 0;
+      height: 200px; /* Hauteur fixe sur mobile */
+    }
+    
+    .game-log-entries {
+      max-height: none; /* S'adapte à la hauteur du conteneur */
+    }
+  }

@@ -305,3 +305,51 @@
     min-width: 120px;
   }
 }
+
+/* Ajouter à la fin de Monster.css */
+
+/* Animation pour quand le monstre attaque */
+.monster-attacking {
+  animation: monster-attack 1.5s infinite alternate;
+}
+
+@keyframes monster-attack {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-10px) scale(1.03); }
+}
+
+.monster-turn-message {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(200, 0, 0, 0.9), rgba(150, 0, 0, 0.9));
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  animation: pulse-attack 0.8s infinite alternate;
+  z-index: 100;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  font-family: 'Bangers', cursive;
+}
+
+.monster-turn-message i {
+  margin-right: 0.5rem;
+  animation: monster-shake 0.5s infinite;
+}
+
+@keyframes pulse-attack {
+  0% { transform: translateX(-50%) scale(1); }
+  100% { transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes monster-shake {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
