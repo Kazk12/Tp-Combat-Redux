@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Tsuna from "../../assets/Heros/Tsuna.gif";
 import AOT from "../../assets/Heros/AOT.webp";
+import ErenPostTransfo from "../../assets/Heros/ErenPostTransfo.gif"; // Image pour Eren transformé
 import Boruto from "../../assets/Heros/Boruto.webp";
 import Isagi from "../../assets/Heros/Isagi.jpg";
 import Gotaga from "../../assets/Heros/Gota.gif";
@@ -17,9 +18,9 @@ const initialState = {
           id: 1,
           isOnCooldown: false,
           canPlay: true,
-          ultimateCharge: 0, // Compteur pour l'ultime
-          ultimateMaxCharge: 2, // Nombre de tours nécessaires
-          isUltimateReady: false, // Indique si l'ultime est prêt
+          ultimateCharge: 0,
+          ultimateMaxCharge: 2,
+          isUltimateReady: false,
           ultimate: {
             name: "Percée du Point Zéro",
             damage: 50,
@@ -47,10 +48,11 @@ const initialState = {
           ultimateCharge: 0,
           ultimateMaxCharge: 3,
           isUltimateReady: false,
+          isTransformed: false, // Nouvel attribut pour indiquer si Eren est transformé
           ultimate: {
             name: "Assaut du Titan",
-            damage: 60,
-            manaCost: 25,
+            damage: 0, // Pas de dégâts directs, c'est une transformation
+            manaCost: 0,
             description: "Se transforme en Titan et écrase l'ennemi",
             animationClass: "eren-ultimate"
           },
@@ -118,10 +120,10 @@ const initialState = {
       ],
   monster: {
     name: "French Monster",
-    pv: 2500,
-    pvMax: 2500,
+    pv: 100,
+    pvMax: 100,
     image: Gotaga,
-    strength: 20,
+    strength: 50,
     isAttacking: false
   },
   currentTurn: 1,
@@ -129,9 +131,9 @@ const initialState = {
   roundNumber: 1,
   gameLog: ["Le combat commence !"],
   isMonsterTurn: false,
-  showUltimateAnimation: false, // Indique si l'animation d'ultime est visible
-  currentUltimateAnimation: null, // Classe CSS pour l'animation actuelle
-  currentUltimatePlayer: null, // Joueur qui lance l'ultime actuellement
+  showUltimateAnimation: false,
+  currentUltimateAnimation: null,
+  currentUltimatePlayer: null,
 };
 
 export const fightSlice = createSlice({
@@ -140,10 +142,11 @@ export const fightSlice = createSlice({
   reducers: {
     // Action pour attaquer le monstre pendant le tour d'un joueur
     hitMonster: (state, action) => {
-      const { playerId, damage, manaCost, effect } = action.payload;
+      const { playerId, damage, manaCost, effect, capacityName } = action.payload;
       const player = state.players.find(p => p.id === playerId);
       
-      if (player && player.mana >= manaCost && player.canPlay) {
+      // Vérifier que le joueur est vivant et peut jouer
+      if (player && player.pv > 0 && player.mana >= manaCost && player.canPlay) {
         // Réduit le mana
         player.mana -= manaCost;
         
@@ -152,31 +155,48 @@ export const fightSlice = createSlice({
           // Soigne le joueur
           const healAmount = 15;
           player.pv = Math.min(player.pvMax, player.pv + healAmount);
-          state.gameLog.unshift(`${player.name} utilise ${action.payload.capacityName || "une capacité de soin"} et récupère ${healAmount} PV !`);
+          state.gameLog.unshift(`${player.name} utilise ${capacityName || "une capacité de soin"} et récupère ${healAmount} PV !`);
         } else {
+          // Calculer les dégâts (bonus pour Eren transformé)
+          let finalDamage = damage;
+          if (player.name === "Eren" && player.isTransformed) {
+            finalDamage = Math.floor(damage * 1.5); // 50% de bonus de dégâts
+            state.gameLog.unshift(`Le pouvoir du Titan augmente les dégâts de ${damage} à ${finalDamage} !`);
+          }
+          
           // Inflige les dégâts au monstre
-          state.monster.pv = Math.max(0, state.monster.pv - damage);
+          state.monster.pv = Math.max(0, state.monster.pv - finalDamage);
           
           // Message selon le personnage
           let attackMessage = "";
           switch(player.name) {
             case "Tsuna":
-              attackMessage = `${player.name} libère ses flammes de dernière volonté et inflige ${damage} dégâts !`;
+              attackMessage = `${player.name} libère ses flammes de dernière volonté et inflige ${finalDamage} dégâts !`;
               break;
             case "Eren":
-              attackMessage = `${player.name} attaque férocement et inflige ${damage} dégâts !`;
+              if (player.isTransformed) {
+                attackMessage = `Le Titan d'Attaque écrase le monstre et inflige ${finalDamage} dégâts !`;
+              } else {
+                attackMessage = `${player.name} attaque férocement et inflige ${finalDamage} dégâts !`;
+              }
               break;
             case "Boruto":
-              attackMessage = `${player.name} utilise ses techniques ninja et inflige ${damage} dégâts !`;
+              attackMessage = `${player.name} utilise ses techniques ninja et inflige ${finalDamage} dégâts !`;
               break;
             case "Isagi":
-              attackMessage = `${player.name} calcule la trajectoire parfaite et inflige ${damage} dégâts !`;
+              attackMessage = `${player.name} calcule la trajectoire parfaite et inflige ${finalDamage} dégâts !`;
               break;
             default:
-              attackMessage = `${player.name} utilise une capacité et inflige ${damage} dégâts !`;
+              attackMessage = `${player.name} utilise une capacité et inflige ${finalDamage} dégâts !`;
           }
           
           state.gameLog.unshift(attackMessage);
+          
+          // Vérifier si le monstre est vaincu
+          if (state.monster.pv <= 0) {
+            state.gameLog.unshift(`🎉 VICTOIRE ! Le ${state.monster.name} a été vaincu !`);
+            return;
+          }
         }
         
         // Activer le cooldown
@@ -198,21 +218,7 @@ export const fightSlice = createSlice({
         }
         
         // Passer au joueur suivant
-        const nextPlayerId = playerId % 4 + 1;
-        state.currentTurn = nextPlayerId;
-        
-        // Vérifier si tous les joueurs ont joué
-        if (playerId === 4) {
-          // Si oui, c'est au tour du monstre
-          state.isMonsterTurn = true;
-          state.gameLog.unshift(`Fin du round ${state.roundNumber}. Le monstre prépare son attaque...`);
-        } else {
-          // Activer le joueur suivant
-          const nextPlayer = state.players.find(p => p.id === nextPlayerId);
-          if (nextPlayer) {
-            nextPlayer.canPlay = true;
-          }
-        }
+        passTurnToNextPlayer(state, playerId);
       }
     },
     
@@ -221,7 +227,8 @@ export const fightSlice = createSlice({
       const { playerId } = action.payload;
       const player = state.players.find(p => p.id === playerId);
       
-      if (player && player.isUltimateReady && player.mana >= player.ultimate.manaCost && player.canPlay) {
+      // Vérifier que le joueur est vivant et peut utiliser son ultime
+      if (player && player.pv > 0 && player.isUltimateReady && player.mana >= player.ultimate.manaCost && player.canPlay) {
         // Réduit le mana
         player.mana -= player.ultimate.manaCost;
         
@@ -251,8 +258,6 @@ export const fightSlice = createSlice({
         
         state.gameLog.unshift(ultimateMessage);
         
-        // Les dégâts seront appliqués après l'animation via l'action completeUltimate
-        
         // Réinitialiser l'état de l'ultime
         player.isUltimateReady = false;
         player.ultimateCharge = 0;
@@ -263,16 +268,52 @@ export const fightSlice = createSlice({
       }
     },
     
+    // Action pour transformer Eren
+    transformEren: (state) => {
+      const eren = state.players.find(p => p.name === "Eren");
+      if (eren) {
+        // Changer l'image d'Eren pour sa forme Titan
+        eren.image = ErenPostTransfo;
+        
+        // Marquer qu'Eren est transformé
+        eren.isTransformed = true;
+        
+        // Donner un bonus statistique après la transformation
+        eren.pvMax += 50;
+        eren.pv += 50;
+        eren.manaMax += 20;
+        eren.mana += 20;
+        
+        // Message de transformation
+        state.gameLog.unshift("🔄 Eren s'est transformé en Titan d'attaque ! Sa puissance a augmenté (+50 PV, +20 Mana) !");
+      }
+    },
+    
     // Action appelée après la fin de l'animation d'ultime
     completeUltimate: (state) => {
       if (state.currentUltimatePlayer) {
         const player = state.currentUltimatePlayer;
         
-        // Appliquer les dégâts de l'ultime
-        state.monster.pv = Math.max(0, state.monster.pv - player.ultimate.damage);
+        // Pour Eren, pas de dégâts directs, c'est une transformation
+        if (player.name === "Eren") {
+          // Pas de dégâts à appliquer
+          state.gameLog.unshift(`La transformation d'Eren en Titan est complète. Sa puissance au combat est décuplée !`);
+        } else {
+          // Appliquer les dégâts de l'ultime pour les autres personnages
+          state.monster.pv = Math.max(0, state.monster.pv - player.ultimate.damage);
+          state.gameLog.unshift(`L'ultime de ${player.name} inflige ${player.ultimate.damage} dégâts massifs au monstre !`);
+        }
         
-        // Message pour les dégâts
-        state.gameLog.unshift(`L'ultime de ${player.name} inflige ${player.ultimate.damage} dégâts massifs au monstre !`);
+        // Vérifier si le monstre est vaincu
+        if (state.monster.pv <= 0) {
+          state.gameLog.unshift(`🎉 VICTOIRE ! Le ${state.monster.name} a été vaincu !`);
+          
+          // Réinitialiser l'animation
+          state.showUltimateAnimation = false;
+          state.currentUltimateAnimation = null;
+          state.currentUltimatePlayer = null;
+          return;
+        }
         
         // Réinitialiser l'animation
         state.showUltimateAnimation = false;
@@ -280,34 +321,27 @@ export const fightSlice = createSlice({
         state.currentUltimatePlayer = null;
         
         // Passer au joueur suivant
-        const nextPlayerId = player.id % 4 + 1;
-        state.currentTurn = nextPlayerId;
-        
-        // Vérifier si tous les joueurs ont joué
-        if (player.id === 4) {
-          // Si oui, c'est au tour du monstre
-          state.isMonsterTurn = true;
-          state.gameLog.unshift(`Fin du round ${state.roundNumber}. Le monstre prépare son attaque...`);
-        } else {
-          // Activer le joueur suivant
-          const nextPlayer = state.players.find(p => p.id === nextPlayerId);
-          if (nextPlayer) {
-            nextPlayer.canPlay = true;
-          }
-        }
+        passTurnToNextPlayer(state, player.id);
       }
     },
     
     // Nouvelle action pour l'attaque du monstre à la fin du round
     monsterAttack: (state) => {
       if (state.isMonsterTurn) {
+        // Vérifier s'il reste des joueurs vivants
+        const alivePlayers = state.players.filter(p => p.pv > 0);
+        
+        if (alivePlayers.length === 0) {
+          // Game over si tous les joueurs sont morts
+          state.gameLog.unshift("💀 GAME OVER ! Tous les héros ont été vaincus...");
+          state.isMonsterTurn = false;  // Éviter la boucle infinie
+          return;
+        }
+        
         // Le monstre attaque
         state.monster.isAttacking = true;
         
-        // Sélectionner un joueur aléatoirement
-        const alivePlayers = state.players.filter(p => p.pv > 0);
-        if (alivePlayers.length === 0) return;
-        
+        // Sélectionner un joueur vivant aléatoirement
         const randomIndex = Math.floor(Math.random() * alivePlayers.length);
         const targetPlayer = alivePlayers[randomIndex];
         
@@ -321,18 +355,31 @@ export const fightSlice = createSlice({
         } else {
           // Le monstre touche sa cible
           const damage = Math.floor(Math.random() * state.monster.strength) + 10; // 10-30 dégâts
-          targetPlayer.pv = Math.max(0, targetPlayer.pv - damage);
+          
+          // Réduction des dégâts pour Eren transformé
+          let finalDamage = damage;
+          if (targetPlayer.name === "Eren" && targetPlayer.isTransformed) {
+            finalDamage = Math.floor(damage * 0.7); // 30% de résistance aux dégâts
+            state.gameLog.unshift(`L'armure du Titan réduit les dégâts de ${damage} à ${finalDamage} !`);
+          }
+          
+          targetPlayer.pv = Math.max(0, targetPlayer.pv - finalDamage);
           
           // Messages d'attaque variés
           const attackMessages = [
-            `Le monstre attaque ${targetPlayer.name} et inflige ${damage} dégâts !`,
-            `Le monstre frappe ${targetPlayer.name} de plein fouet pour ${damage} dégâts !`,
-            `${targetPlayer.name} subit ${damage} dégâts d'une attaque violente !`,
-            `Le monstre charge ${targetPlayer.name} et cause ${damage} dégâts !`
+            `Le monstre attaque ${targetPlayer.name} et inflige ${finalDamage} dégâts !`,
+            `Le monstre frappe ${targetPlayer.name} de plein fouet pour ${finalDamage} dégâts !`,
+            `${targetPlayer.name} subit ${finalDamage} dégâts d'une attaque violente !`,
+            `Le monstre charge ${targetPlayer.name} et cause ${finalDamage} dégâts !`
           ];
           
           const randomMessage = attackMessages[Math.floor(Math.random() * attackMessages.length)];
           state.gameLog.unshift(randomMessage);
+          
+          // Message si le joueur est mort
+          if (targetPlayer.pv <= 0) {
+            state.gameLog.unshift(`💀 ${targetPlayer.name} a été vaincu !`);
+          }
         }
         
         // Fin du tour du monstre
@@ -342,14 +389,37 @@ export const fightSlice = createSlice({
         // Préparer le prochain round
         state.roundNumber += 1;
         
+        // Vérifier s'il reste des joueurs vivants
+        const remainingAlivePlayers = state.players.filter(p => p.pv > 0);
+        if (remainingAlivePlayers.length === 0) {
+          state.gameLog.unshift("💀 GAME OVER ! Tous les héros ont été vaincus...");
+          return;
+        }
+        
         // Réinitialiser tous les joueurs pour le prochain round
         state.players.forEach(player => {
           player.isOnCooldown = false;
-          player.canPlay = player.id === 1; // Seul le joueur 1 peut jouer au début
+          player.canPlay = false; // Tous désactivés par défaut
         });
         
-        // Mettre à jour le tour
-        state.currentTurn = 1;
+        // Trouver le premier joueur vivant et l'activer
+        let firstAlivePlayerFound = false;
+        for (let i = 1; i <= 4; i++) {
+          const player = state.players.find(p => p.id === i);
+          if (player && player.pv > 0) {
+            player.canPlay = true;
+            state.currentTurn = i;
+            firstAlivePlayerFound = true;
+            break;
+          }
+        }
+        
+        // Mise à jour sécurisée du tour
+        if (!firstAlivePlayerFound) {
+          // Cas improbable mais gérons-le quand même
+          state.gameLog.unshift("💀 GAME OVER ! Tous les héros ont été vaincus...");
+          return;
+        }
         
         state.gameLog.unshift(`Début du round ${state.roundNumber} !`);
       }
@@ -360,7 +430,7 @@ export const fightSlice = createSlice({
       const { playerId } = action.payload;
       const player = state.players.find(p => p.id === playerId);
       
-      if (player && player.canPlay) {
+      if (player && player.pv > 0 && player.canPlay) {
         player.canPlay = false;
         
         // Messages personnalisés pour passer le tour
@@ -378,21 +448,7 @@ export const fightSlice = createSlice({
         player.mana = Math.min(player.manaMax, player.mana + 3);
         
         // Passer au joueur suivant
-        const nextPlayerId = playerId % 4 + 1;
-        state.currentTurn = nextPlayerId;
-        
-        // Vérifier si tous les joueurs ont joué
-        if (playerId === 4) {
-          // Si oui, c'est au tour du monstre
-          state.isMonsterTurn = true;
-          state.gameLog.unshift(`Fin du round ${state.roundNumber}. Le monstre prépare son attaque...`);
-        } else {
-          // Activer le joueur suivant
-          const nextPlayer = state.players.find(p => p.id === nextPlayerId);
-          if (nextPlayer) {
-            nextPlayer.canPlay = true;
-          }
-        }
+        passTurnToNextPlayer(state, playerId);
       }
     },
     
@@ -408,6 +464,59 @@ export const fightSlice = createSlice({
   }
 });
 
+// Fonction helper pour passer au prochain joueur vivant - version corrigée
+function findAndActivateNextAlivePlayer(state, currentPlayerIndex) {
+  // Convertir l'index 0-3 en ID 1-4
+  const currentPlayerId = currentPlayerIndex + 1;
+  
+  // Parcourir tous les joueurs à partir du joueur actuel
+  for (let i = 1; i <= 4; i++) {
+    // Cette formule garantit que nous parcourons dans l'ordre correct
+    const nextPlayerId = ((currentPlayerId + i - 1) % 4) + 1;
+    const nextPlayer = state.players.find(p => p.id === nextPlayerId);
+    
+    if (nextPlayer && nextPlayer.pv > 0) {
+      nextPlayer.canPlay = true;
+      state.currentTurn = nextPlayerId;
+      return true;
+    }
+  }
+  
+  // Si aucun joueur vivant n'est trouvé
+  return false;
+}
+
+// Fonction helper pour passer au joueur suivant ou au monstre - version corrigée
+function passTurnToNextPlayer(state, playerId) {
+  // Vérifier s'il reste des joueurs vivants
+  const alivePlayers = state.players.filter(p => p.pv > 0);
+  if (alivePlayers.length === 0) {
+    state.gameLog.unshift("💀 GAME OVER ! Tous les héros ont été vaincus...");
+    return;
+  }
+  
+  const currentPlayerIndex = playerId - 1;
+  
+  // Cas spécial: si c'était le dernier joueur (ID 4) ou si aucun joueur après celui-ci n'est vivant
+  let allNextPlayersDead = true;
+  for (let i = playerId + 1; i <= 4; i++) {
+    const checkPlayer = state.players.find(p => p.id === i);
+    if (checkPlayer && checkPlayer.pv > 0) {
+      allNextPlayersDead = false;
+      break;
+    }
+  }
+  
+  if (playerId === 4 || allNextPlayersDead) {
+    state.isMonsterTurn = true;
+    state.gameLog.unshift(`Fin du round ${state.roundNumber}. Le monstre prépare son attaque...`);
+    return;
+  }
+  
+  // Sinon, chercher le prochain joueur vivant
+  findAndActivateNextAlivePlayer(state, currentPlayerIndex);
+}
+
 export const { 
   hitMonster, 
   monsterAttack, 
@@ -415,6 +524,7 @@ export const {
   resetLastAttackMissed,
   useUltimate,
   completeUltimate,
+  transformEren,
   resetGame 
 } = fightSlice.actions;
 

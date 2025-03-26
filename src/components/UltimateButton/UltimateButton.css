@@ -1,247 +1,246 @@
 .ultimate-container {
-    margin-top: 0.5rem;
-    width: 100%;
-    height: 60px;
-    position: relative;
-  }
-  
-  .ultimate-button {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    border: 2px solid rgba(0, 0, 0, 0.8);
-    box-shadow: 
-      0 4px 0 rgba(0, 0, 0, 0.8),
-      0 6px 10px rgba(0, 0, 0, 0.4);
-    text-transform: uppercase;
-    font-family: 'Russo One', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    padding: 0.25rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.2s ease;
-    transform: translateY(-2px);
-  }
-  
-  /* État de charge */
-  .ultimate-charging {
-    background: linear-gradient(to bottom, #424242, #212121);
-    color: rgba(255, 255, 255, 0.9);
-    border-color: #111;
-  }
-  
-  /* État prêt */
-  .ultimate-ready {
-    background: linear-gradient(135deg, #ff9500, #ff5c00);
-    color: white;
-    border-color: #c74500;
-    animation: pulse-ultimate 1s infinite alternate;
-    box-shadow: 
-      0 4px 0 rgba(0, 0, 0, 0.8),
-      0 6px 10px rgba(0, 0, 0, 0.5),
-      0 0 15px rgba(255, 153, 0, 0.5);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-  
-  @keyframes pulse-ultimate {
-    0% { transform: translateY(-2px) scale(1); }
-    100% { transform: translateY(-4px) scale(1.02); }
-  }
-  
-  /* Désactivé */
-  .ultimate-disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-  
-  /* Pas assez de mana */
-  .ultimate-no-mana {
-    opacity: 0.7;
-    background: linear-gradient(to bottom, #424242, #212121) !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    border-color: #111 !important;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.8), 0 3px 5px rgba(0, 0, 0, 0.3) !important;
-    animation: none !important;
-    transform: translateY(0) !important;
-  }
-  
-  .ultimate-no-mana::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255, 0, 0, 0.1),
-      rgba(255, 0, 0, 0.1) 10px,
-      transparent 10px,
-      transparent 20px
-    );
-    z-index: 0;
-  }
-  
-  .ultimate-button:hover:not(.ultimate-disabled):not(.ultimate-no-mana) {
-    transform: translateY(-4px);
-    box-shadow: 
-      0 6px 0 rgba(0, 0, 0, 0.8),
-      0 8px 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .ultimate-button:active:not(.ultimate-disabled):not(.ultimate-no-mana) {
-    transform: translateY(0);
-    box-shadow: 
-      0 2px 0 rgba(0, 0, 0, 0.8),
-      0 3px 5px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Contenu du bouton */
-  .ultimate-content {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    gap: 0.5rem;
-    z-index: 1;
+  margin-top: 0.5rem;
+  width: 100%;
+  height: 20px; 
+  position: relative;
+}
+
+.ultimate-button {
+  width: 100%;
+  height: 40%;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 4px 0 rgba(0, 0, 0, 0.8),
+    0 6px 10px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  font-family: 'Russo One', sans-serif;
+  font-size: 0.7rem; /* Légèrement réduit */
+  letter-spacing: 0.5px;
+  padding: 0.2rem; /* Réduit pour s'adapter à la hauteur */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  transform: translateY(-2px);
+}
+
+/* Contenu du bouton */
+.ultimate-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.ultimate-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; /* Réduit de 30px à 24px */
+  height: 24px; /* Réduit de 30px à 24px */
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  font-size: 0.85rem; /* Réduit */
+}
+
+.ultimate-details {
+  display: flex;
+  flex-direction: row; /* Changé de column à row pour gagner en espace */
+  align-items: center;
+  flex-grow: 1;
+  gap: 8px;
+}
+
+.ultimate-name {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.ultimate-stats {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ultimate-damage, .ultimate-cost {
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.05rem 0.25rem; /* Réduit */
+  border-radius: 4px;
+}
+
+/* Barre de progression */
+.ultimate-progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px; /* Réduit de 8px à 6px */
+  background-color: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.ultimate-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #c31432, #ff9900);
+  transition: width 0.3s ease;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+.ultimate-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.55rem;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+  font-weight: 700;
+}
+
+/* Indicateur prêt */
+.ultimate-ready-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  text-align: center;
+  font-size: 0.6rem; /* Réduit */
+  font-weight: 700;
+  padding: 0.05rem 0; /* Réduit */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  animation: flicker 1.5s infinite alternate;
+  letter-spacing: 1px;
+}
+
+@keyframes flicker {
+  0% { color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #ff0, 0 0 15px #ff0; }
+  100% { color: #fff9c1; text-shadow: 0 0 10px #ffed4f, 0 0 20px #ff9900, 0 0 30px #ff0; }
+}
+
+/* Styles pour les différents types d'ultimates */
+.ultimate-fire {
+  background: linear-gradient(165deg, #f12711, #f5af19);
+  color: white;
+}
+
+.ultimate-ice {
+  background: linear-gradient(165deg, #00c6fb, #005bea);
+  color: white;
+}
+
+.ultimate-thunder {
+  background: linear-gradient(165deg, #b721ff, #21d4fd);
+  color: white;
+}
+
+.ultimate-earth {
+  background: linear-gradient(165deg, #5a3f37, #2c7744);
+  color: white;
+}
+
+/* Effets de hover et active */
+.ultimate-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 3px 0 rgba(0, 0, 0, 0.8),
+    0 5px 8px rgba(0, 0, 0, 0.4);
+}
+
+.ultimate-button:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 1px 0 rgba(0, 0, 0, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Styles pour l'état désactivé */
+.ultimate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 0 rgba(0, 0, 0, 0.6),
+    0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.ultimate-button:disabled::before {
+  opacity: 0.5;
+}
+
+/* Animations pour l'effet de lueur */
+.ultimate-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0)
+  );
+  transform: rotate(30deg);
+  animation: shimmer 3s infinite;
+  z-index: 0;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) rotate(30deg); }
+  100% { transform: translateX(150%) rotate(30deg); }
+}
+
+/* Media queries pour le responsive */
+@media (max-width: 1200px) {
+  .ultimate-container {
+    height: 36px;
   }
   
   .ultimate-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-    font-size: 1rem;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ultimate-container {
+    height: 32px;
   }
   
-  .ultimate-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex-grow: 1;
+  .ultimate-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
   }
   
   .ultimate-name {
-    font-weight: 700;
-    font-size: 0.8rem;
-    margin-bottom: 2px;
-  }
-  
-  .ultimate-stats {
-    display: flex;
-    gap: 0.5rem;
+    font-size: 0.65rem;
   }
   
   .ultimate-damage, .ultimate-cost {
-    font-size: 0.65rem;
-    display: flex;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 0.1rem 0.3rem;
-    border-radius: 4px;
-  }
-  
-  .ultimate-damage i, .ultimate-cost i {
-    margin-right: 0.2rem;
-  }
-  
-  .ultimate-damage {
-    color: #ffdd00;
-  }
-  
-  .ultimate-cost {
-    color: #00eaff;
-  }
-  
-  /* Barre de progression */
-  .ultimate-progress-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background-color: rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-  }
-  
-  .ultimate-progress {
-    height: 100%;
-    background: linear-gradient(to right, #3f51b5, #9c27b0);
-    transition: width 0.3s ease;
-  }
-  
-  .ultimate-progress-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     font-size: 0.6rem;
-    font-weight: 700;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    padding: 0.05rem 0.2rem;
   }
-  
-  /* Indicateur prêt */
-  .ultimate-ready-indicator {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 0.1rem 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    animation: flicker 1.5s infinite alternate;
-    letter-spacing: 1px;
-  }
-  
-  @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-      opacity: 1;
-    }
-    20%, 24%, 55% {
-      opacity: 0.5;
-    }
-  }
-  
-  /* Responsive */
-  @media (max-width: 1200px) {
-    .ultimate-container {
-      height: 50px;
-    }
-    
-    .ultimate-icon {
-      width: 24px;
-      height: 24px;
-      font-size: 0.9rem;
-    }
-    
-    .ultimate-name {
-      font-size: 0.7rem;
-    }
-    
-    .ultimate-stats {
-      gap: 0.3rem;
-    }
-    
-    .ultimate-damage, .ultimate-cost {
-      font-size: 0.6rem;
-      padding: 0.05rem 0.2rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .ultimate-container {
-      height: 55px;
-    }
-  }
+}
